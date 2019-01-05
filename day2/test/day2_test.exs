@@ -28,4 +28,16 @@ defmodule Day2Test do
 		  ]) == 12
   end
   
+  test "closest" do
+	  assert Day2.closest([
+		  "abcde",
+		  "fghij",
+		  "klmno",
+		  "pqrst",
+		  "fguij",
+		  "axcye",
+		  "wvxyz"
+		  ]) == "fgij"
+  end
+  
 end

@@ -62,4 +62,32 @@ defmodule Day2 do
 		acc
 	end 
 
+	def closest(list) when is_list(list) do 
+		list
+		|> Enum.map(&String.to_charlist/1)
+		|> closest_charlists()
+	end
+
+
+	def closest_charlists([head | tail]) do 
+		Enum.find_value(tail, &one_char_difference_string(&1, head)) ||
+			closest_charlists(tail)
+	end
+
+	defp one_char_difference_string(charlist1, charlist2) do
+		charlist1 
+		|> Enum.zip(charlist2)
+		|> Enum.split_with(fn {cp1, cp2} -> cp1 == cp2 end)
+		|> case do 
+			{tuples_of_codepoints, [_]} -> 
+				tuples_of_codepoints
+				|> Enum.map(fn {cp, _} -> cp end)
+				|> List.to_string()
+				
+			{_, _} ->
+				nil
+		end
+	end
+
+
 end
