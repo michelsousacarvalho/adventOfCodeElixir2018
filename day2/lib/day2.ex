@@ -8,25 +8,46 @@ defmodule Day2 do
 	# 		Map.update(acc, codepoint, 1, &(&1 +1))
 	# 	end)
 	# end
+	
+	#SECOND VERSION
+	# def checksum(list) when is_list(list) do
+	# 	{twices, thrices} =
+	# 	list
+	# 	|> Enum.map(fn box_id ->
+	# 		box_id
+	# 		|> count_characters()
+	# 		|> get_twice_and_thrice()
+	# 	end)
+	# 	|> Enum.reduce({0, 0}, fn {twice, thrice}, {total_twice, total_thrice} ->
+	# 		{twice+total_twice, thrice + total_thrice}
+	# 	end)
+	# 	twices * thrices
+	# end
+	
 	def checksum(list) when is_list(list) do 
 		{twices, thrices} = 
-		list 
-		|> Enum.map(fn box_id ->
-			box_id
-			|> count_characters()
-			|> get_twice_and_thrice()
-		end)
-		|> Enum.reduce({0, 0}, fn {twice, thrice}, {total_twice, total_thrice} -> 
+		Enum.reduce(list, {0,0}, fn box_id, {total_twice, total_thrice} ->
+			{twice, thrice} = box_id |> count_characters() |> get_twice_and_thrice()
 			{twice+total_twice, thrice + total_thrice}
 		end)
 		twices * thrices
 	end
 	
+
 	def get_twice_and_thrice(characters) when is_map(characters) do
-		twice = Enum.count(characters, fn {_codepoint, count} -> count == 2 end)
-		thrice = Enum.count(characters, &match?({_codepoint, 3}, &1))
-		{min(twice,1), min(thrice,1)}
+		Enum.reduce(characters, {0, 0}, fn
+			{_codepoint,2}, {_twice, thrice}-> {1, thrice}
+			{_codepoint,3}, {twice, _thrice}-> {twice, 1}
+			_, acc -> acc
+		end)
 	end
+	
+	#SECOND VERSION
+	# def get_twice_and_thrice(characters) when is_map(characters) do
+	# 	twice = Enum.count(characters, fn {_codepoint, count} -> count == 2 end)
+	# 	thrice = Enum.count(characters, &match?({_codepoint, 3}, &1))
+	# 	{min(twice,1), min(thrice,1)}
+	# end
 	
 	def count_characters(string) when is_binary(string) do 
 		count_characters(string, %{})
