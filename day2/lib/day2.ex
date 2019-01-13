@@ -73,21 +73,41 @@ defmodule Day2 do
 		Enum.find_value(tail, &one_char_difference_string(&1, head)) ||
 			closest_charlists(tail)
 	end
-
+	
 	defp one_char_difference_string(charlist1, charlist2) do
-		charlist1 
-		|> Enum.zip(charlist2)
-		|> Enum.split_with(fn {cp1, cp2} -> cp1 == cp2 end)
-		|> case do 
-			{tuples_of_codepoints, [_]} -> 
-				tuples_of_codepoints
-				|> Enum.map(fn {cp, _} -> cp end)
-				|> List.to_string()
-				
-			{_, _} ->
-				nil
-		end
+		one_char_difference_string(charlist1, charlist2, [], 0)
 	end
+	
+	defp one_char_difference_string([head | tail1], [head | tail2], same_acc, different_count) do 
+		one_char_difference_string(tail1, tail2, [head | same_acc], different_count)  
+	end
+	
+	defp one_char_difference_string([_ | tail1], [_ | tail2], same_acc, different_count) do 
+		one_char_difference_string(tail1, tail2, same_acc, different_count + 1)  
+	end
+	
+	defp one_char_difference_string([], [], same_acc, 1) do 
+		same_acc |> Enum.reverse() |> List.to_string()
+	end
+	
+	defp one_char_difference_string([], [], _, _) do 
+		nil
+	end
+
+	# defp one_char_difference_string(charlist1, charlist2) do
+	# 	charlist1
+	# 	|> Enum.zip(charlist2)
+	# 	|> Enum.split_with(fn {cp1, cp2} -> cp1 == cp2 end)
+	# 	|> case do
+	# 		{tuples_of_codepoints, [_]} ->
+	# 			tuples_of_codepoints
+	# 			|> Enum.map(fn {cp, _} -> cp end)
+	# 			|> List.to_string()
+	#
+	# 		{_, _} ->
+	# 			nil
+	# 	end
+	# end
 
 
 end
